@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Macflow — Des vidéos IA publiées toutes seules</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4fb;--panel:#fff;--ink:#15131f;--mute:#5f5b73;--brand:#5b3df5;--on:#fff;--hot:#ff6a3d;--line:#dcd7ee;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121020;--panel:#1c1930;--ink:#f3f1fa;--mute:#a9a4c2;--brand:#8d78ff;--on:#0f0c1f;--hot:#ff8a64;--line:#2f2a4d}}
+:root[data-theme="dark"]{--bg:#121020;--panel:#1c1930;--ink:#f3f1fa;--mute:#a9a4c2;--brand:#8d78ff;--on:#0f0c1f;--hot:#ff8a64;--line:#2f2a4d}
+:root[data-theme="light"]{--bg:#f6f4fb;--panel:#fff;--ink:#15131f;--mute:#5f5b73;--brand:#5b3df5;--on:#fff;--hot:#ff6a3d;--line:#dcd7ee}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 "DM Sans",system-ui,sans-serif}
+a{color:inherit}
+.w{max-width:1080px;margin:0 auto;padding:0 22px}
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.logo{font:800 1.5rem "Bricolage Grotesque",sans-serif;text-decoration:none}
+.logo i{display:inline-block;width:.55em;height:.9em;border-radius:.16em;background:var(--brand);margin-right:.2em;vertical-align:-.1em;transform:rotate(8deg)}
+nav .l{display:flex;gap:22px;align-items:center}
+nav .l a{text-decoration:none;color:var(--mute);font-weight:500}
+.btn{display:inline-block;background:var(--brand);color:var(--on);border:0;border-radius:10px;padding:13px 22px;font:700 1rem "DM Sans",sans-serif;cursor:pointer;text-decoration:none}
+.btn.o{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.btn:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:40px 0 70px}
+h1{font:800 clamp(2.4rem,6vw,4.2rem)/1.02 "Bricolage Grotesque",sans-serif;margin:0 0 18px;letter-spacing:-.02em}
+.lead{color:var(--mute);font-size:1.15rem;max-width:46ch;margin:0 0 26px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.small{color:var(--mute);font-size:.9rem;margin-top:12px}
+.phones{display:flex;gap:14px;justify-content:center;align-items:flex-start}
+.ph{width:31%;aspect-ratio:9/16;border-radius:22px;position:relative;overflow:hidden;border:3px solid var(--ink)}
+.ph:nth-child(1){background:var(--brand);margin-top:38px}.ph:nth-child(2){background:var(--hot)}.ph:nth-child(3){background:var(--ink);margin-top:58px}
+.ph b{position:absolute;left:12%;right:12%;height:9px;border-radius:5px;background:#fff;opacity:.92}
+.ph b:nth-of-type(1){bottom:26%}.ph b:nth-of-type(2){bottom:19%;right:34%}
+.ph u{position:absolute;top:14%;left:18%;width:64%;aspect-ratio:1;border-radius:50%;background:#fff;opacity:.22}
+.ph:nth-child(2) u{border-radius:22%}.ph:nth-child(3) u{border-radius:50% 50% 0 0}
+.ph s{position:absolute;top:10px;right:10px;font:700 .6rem "DM Sans";color:#fff;background:#0008;padding:2px 7px;border-radius:9px;text-decoration:none}
+section{padding:54px 0}
+h2{font:800 clamp(1.7rem,4vw,2.5rem)/1.1 "Bricolage Grotesque",sans-serif;margin:0 0 12px;letter-spacing:-.01em}
+.sec-l{color:var(--mute);max-width:56ch;margin:0 0 30px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+.step h3{font:700 1.15rem "Bricolage Grotesque",sans-serif;margin:0 0 6px}
+.step p{margin:0;color:var(--mute);font-size:.98rem}
+.demo{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;display:grid;grid-template-columns:1fr 1.2fr;gap:26px}
+label{display:block;font-weight:700;margin:0 0 6px;font-size:.95rem}
+input,select{width:100%;padding:12px 14px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;margin-bottom:16px}
+#out{border-left:3px solid var(--line);padding-left:22px;min-height:180px}
+#out .sc{display:grid;grid-template-columns:80px 1fr;gap:10px;margin:0 0 12px}
+#out .sc span{font-weight:700;color:var(--brand)}
+#out .sc em{color:var(--mute);font-style:normal;display:block;font-size:.85rem}
+.empty{color:var(--mute)}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
+.plan{background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:26px;display:flex;flex-direction:column}
+.plan.f{border-color:var(--brand);position:relative}
+.tag{position:absolute;top:-13px;left:22px;background:var(--brand);color:var(--on);font-weight:700;font-size:.8rem;padding:3px 12px;border-radius:12px}
+.plan h3{font:800 1.3rem "Bricolage Grotesque",sans-serif;margin:0}
+.price{font:800 3rem/1 "Bricolage Grotesque",sans-serif;margin:12px 0 2px}
+.price small{font:500 1rem "DM Sans";color:var(--mute)}
+.plan ul{list-style:none;padding:0;margin:16px 0 22px;flex:1}
+.plan li{padding:5px 0 5px 26px;position:relative;font-size:.98rem}
+.plan li:before{content:"";position:absolute;left:2px;top:12px;width:12px;height:7px;border-left:3px solid var(--brand);border-bottom:3px solid var(--brand);transform:rotate(-45deg)}
+.plan .btn{text-align:center}
+details{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:700}
+details p{color:var(--mute);margin:8px 0 0}
+footer{border-top:1px solid var(--line);padding:26px 0 44px;color:var(--mute);font-size:.9rem}
+dialog{border:0;border-radius:16px;padding:28px;background:var(--panel);color:var(--ink);width:min(92vw,420px)}
+dialog::backdrop{background:#000a}
+.ok{color:var(--brand);font-weight:700}
+@media (max-width:820px){.hero,.demo{grid-template-columns:1fr}.steps,.plans{grid-template-columns:1fr}nav .l a.h{display:none}#out{border-left:0;padding-left:0;border-top:3px solid var(--line);padding-top:16px}}
+.studio{grid-template-columns:1fr 1fr;align-items:start}
+textarea{width:100%;padding:12px 14px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;margin-bottom:16px;resize:vertical}
+textarea:focus-visible,button:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+input[type=range]{padding:0;accent-color:var(--brand)}
+#cv,#vid{display:block;width:100%;max-width:300px;aspect-ratio:9/16;border-radius:16px;margin:0 auto 12px;background:#000}
+#res{text-align:center}
+@media (max-width:820px){.studio{grid-template-columns:1fr}}
+.lk{background:none;border:0;padding:0;color:var(--brand);font:inherit;text-decoration:underline;cursor:pointer}
+#appshell{min-height:100vh;grid-template-columns:240px 1fr}
+.sb{background:#15131f;color:#f3f1fa;padding:20px 14px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh;overflow:auto}
+.sb .logo{color:#fff;padding:6px 10px 18px}
+.sb button{background:none;border:0;color:#cfcae6;text-align:left;padding:11px 14px;border-radius:10px;font:600 .98rem "DM Sans",sans-serif;cursor:pointer}
+.sb button:hover{background:#25213a}.sb button.on{background:#5b3df5;color:#fff}.sb .sp{flex:1}
+.mn{padding:26px 30px 60px;min-width:0}.vw{max-width:1000px}
+.tb{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.tb h1{font:800 1.9rem "Bricolage Grotesque",sans-serif;margin:0}
+.mn h3{font:800 1.2rem "Bricolage Grotesque",sans-serif;margin:30px 0 12px}
+.pill{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:5px 14px;font-size:.88rem;color:var(--mute)}
+.ban{background:linear-gradient(120deg,#5b3df5,#8d4dff);color:#fff;border-radius:18px;padding:28px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.ban h2{font:800 1.6rem "Bricolage Grotesque",sans-serif;margin:0 0 6px;color:#fff}.ban p{margin:0;opacity:.92}.ban .btn{background:#fff;color:#4a2fd6}
+.g3{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.tile .th{height:96px;display:flex;align-items:center;justify-content:center;font-size:2.6rem}
+.tile canvas{width:100%;height:auto;display:block}
+.tile .tx{padding:12px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.tile .tx span,.tile>span{color:var(--mute);font-size:.85rem}.tile .tx .btn{margin-top:auto;padding:8px 12px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:18px}
+.stats .tile{padding:16px}.stats b{font:800 1.5rem "Bricolage Grotesque",sans-serif}
+.row2{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:10px;flex-wrap:wrap}
+.row2 .btn{padding:7px 12px}
+@media (max-width:820px){#appshell{grid-template-columns:1fr}.sb{position:static;height:auto;flex-direction:row;overflow-x:auto;padding:10px;gap:6px}.sb .logo,.sb .sp{display:none}.sb button{white-space:nowrap;padding:9px 12px}.mn{padding:18px 16px 50px}}
+</style>
+</head>
+<body>
+<div id="landing">
+<div class="w">
+<nav><a class="logo" href="#"><i></i>Macflow</a><div class="l"><a class="h" href="#feat">Fonctionnalités</a><a class="h" href="#tarifs">Tarifs</a><a class="h" href="#faq">FAQ</a><button class="btn o" id="authBtn" type="button" style="padding:9px 16px">Connexion</button><button class="btn" data-open>Créer un compte</button></div></nav>
+
+<header class="hero">
+<div>
+<h1>Tes vidéos courtes, créées et publiées sans toi.</h1>
+<p class="lead">Donne ton sujet : Macflow écrit le script et crée ta vidéo verticale avec sous-titres animés et musique, prête à publier sur TikTok, YouTube Shorts et Instagram Reels.</p>
+<div class="cta"><button class="btn" data-open>Créer mon compte gratuit</button><a class="btn o" href="#how">Voir comment ça marche</a></div>
+<p class="small">Compte gratuit avec 7 jours d'essai, sans carte bancaire.</p>
+</div>
+<div class="phones" aria-hidden="true"><div class="ph"><u></u><b></b><b></b><s>TikTok</s></div><div class="ph"><u></u><b></b><b></b><s>Shorts</s></div><div class="ph"><u></u><b></b><b></b><s>Reels</s></div></div>
+</header>
+
+<section id="how"><h2>Du sujet à la publication en trois étapes</h2><p class="sec-l">Tu règles ton compte une fois, Macflow s'occupe du rythme de publication.</p>
+<div class="steps">
+<div class="step"><h3>1. Choisis ta niche</h3><p>Motivation, finance, cuisine, jeux, faits surprenants… ou écris tes propres sujets.</p></div>
+<div class="step"><h3>2. On crée la vidéo</h3><p>Script, images, voix off, sous-titres animés et musique, au format vertical 9:16.</p></div>
+<div class="step"><h3>3. Publication programmée</h3><p>Tu valides, puis tes vidéos sont programmées selon ton calendrier, avec titre et hashtags.</p></div>
+</div></section>
+
+
+
+<section id="feat"><h2>Tout pour créer tes vidéos</h2><p class="sec-l">Un studio complet dans ton navigateur, pensé pour TikTok, YouTube Shorts et Instagram Reels.</p>
+<div class="steps">
+<div class="step"><h3>Modèles prêts à l'emploi</h3><p>Faits surprenants, top 3, conseils, histoires : choisis un modèle et ton script est prêt.</p></div>
+<div class="step"><h3>Personnages animés</h3><p>Robot, renard, chat ou présentatrice dont la bouche bouge pendant que tu parles.</p></div>
+<div class="step"><h3>Voix off</h3><p>Enregistre ta voix ou importe un fichier audio : la vidéo se cale dessus.</p></div>
+<div class="step"><h3>Sous-titres animés</h3><p>Machine à écrire, rebond ou montée, avec la couleur et la taille que tu veux.</p></div>
+<div class="step"><h3>Musique et transitions</h3><p>Ambiances musicales, fondu, glissement et zoom entre les scènes.</p></div>
+<div class="step"><h3>Tous les formats</h3><p>Vertical, carré ou horizontal, avec ton propre clip ou tes images en fond.</p></div>
+</div></section>
+<section id="tarifs"><h2>Des tarifs simples</h2><p class="sec-l">Créer un compte est gratuit, sans abonnement. Les formules sont facultatives et tu peux en changer à tout moment.</p>
+<div class="plans">
+<div class="plan"><h3>Standard</h3><div class="price">25 €<small> /mois</small></div><p class="small" style="margin:0">Pour lancer un premier compte.</p>
+<ul><li>15 vidéos par mois</li><li>Vidéos de 30 secondes</li><li>Filigrane Macflow</li><li>Voix off, personnages, musique</li></ul><button class="btn o" data-pay="std">Choisir cette formule</button></div>
+<div class="plan f"><span class="tag">Le plus choisi</span><h3>Premium</h3><div class="price">37 €<small> /mois</small></div><p class="small" style="margin:0">Pour publier chaque jour.</p>
+<ul><li>50 vidéos par mois</li><li>Vidéos de 60 secondes</li><li><strong>Sans filigrane</strong></li><li>Voix off, personnages, musique</li></ul><button class="btn" data-pay="pre">Choisir cette formule</button></div>
+<div class="plan"><h3>Premium Max</h3><div class="price">75 €<small> /mois</small></div><p class="small" style="margin:0">Pour les agences et multi-chaînes.</p>
+<ul><li>Vidéos illimitées</li><li>Vidéos de 90 secondes</li><li><strong>Sans filigrane</strong></li><li>Voix off, personnages, musique</li></ul><button class="btn o" data-pay="max">Choisir cette formule</button></div>
+</div><p class="small">Les formules payantes arrivent bientôt. Essai gratuit de 7 jours à l'inscription.</p></section>
+
+<section id="faq"><h2>Questions fréquentes</h2>
+<details><summary>Dois-je payer pour créer un compte ?</summary><p>Non. Créer un compte est gratuit et inclut 7 jours d'essai. Ensuite, tu choisis une formule pour continuer.</p></details>
+<details><summary>Sur quelles plateformes puis-je publier ?</summary><p>TikTok, YouTube Shorts et Instagram Reels, avec d'autres réseaux à venir.</p></details>
+<details><summary>Les vidéos sont-elles signalées comme créées par IA ?</summary><p>Les plateformes demandent de signaler certains contenus générés par IA. Macflow ajoute l'indication quand la plateforme le permet.</p></details>
+<details><summary>Puis-je changer de formule ?</summary><p>Oui, à tout moment, depuis ton compte.</p></details>
+</section>
+</div>
+<footer><div class="w">© 2026 Macflow</div></footer>
+</div>
+
+<div id="appshell" style="display:none">
+<aside class="sb"><a class="logo" href="#" onclick="return false"><i></i>Macflow</a>
+<button data-v="home">🏠 Accueil</button><button data-v="new">➕ Nouveau projet</button><button data-v="tpl">🎞️ Modèles de vidéos</button><button data-v="chars">🎭 Personnages</button><button data-v="proj">📁 Mes projets</button><span class="sp"></span><button data-v="acct">👤 Mon compte</button><button data-v="set">⚙️ Paramètres</button></aside>
+<main class="mn"><div class="tb"><h1 id="vt">Accueil</h1><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="pill" id="tbp"></span><button class="btn" data-v="new" type="button">+ Nouveau projet</button></div></div>
+<div id="exp" class="ban" style="display:none;margin-bottom:18px"><div><h2>Ton essai gratuit est terminé</h2><p>Les formules payantes arrivent bientôt. Tes projets restent enregistrés.</p></div></div>
+<section id="v-home" class="vw"><div class="ban"><div><h2 id="hw">Bienvenue !</h2><p>Que veux-tu créer aujourd'hui ?</p></div><button class="btn" data-v="new" type="button">+ Nouveau projet</button></div>
+<div class="stats"><div class="tile"><span>Formule</span><b id="s1">–</b></div><div class="tile"><span>Vidéos créées</span><b id="s2">0</b></div><div class="tile"><span>Projets enregistrés</span><b id="s3">0</b></div></div>
+<h3>Modèles populaires</h3><div class="g3" id="hmt"></div><h3>Projets récents</h3><div id="hmp"></div></section>
+<section id="v-new" class="vw" style="display:none"><div class="demo studio" id="tools"><div>
+<label for="t">Sujet de la vidéo</label><input id="t" value="les habitudes des gens riches" maxlength="80">
+<button class="btn o" id="ai" type="button" style="margin-bottom:16px">Écrire le script</button>
+<label for="sc">Script (une ligne = une scène)</label><textarea id="sc" rows="6"></textarea>
+<div class="row"><div><label for="st">Style</label><select id="st"><option>Violet</option><option>Océan</option><option>Coucher de soleil</option><option>Nuit</option></select></div>
+<div><label for="mu">Musique</label><select id="mu"><option value="soft">Douce</option><option value="beat">Dynamique</option><option value="none">Aucune</option></select></div></div>
+<div class="row"><div><label for="fm">Format</label><select id="fm"><option value="9:16">Vertical 9:16</option><option value="1:1">Carré 1:1</option><option value="16:9">Horizontal 16:9</option></select></div><div><label for="ch">Personnage</label><select id="ch"><option value="">Aucun</option><option value="robot">Robot Tic</option><option value="fox">Renard Flo</option><option value="cat">Chat Mo</option><option value="lea">Léa</option></select></div></div>
+<div class="row"><div><label for="tc">Couleur du texte</label><select id="tc"><option value="#ffffff">Blanc</option><option value="#ffe14d">Jaune</option><option value="#6ff7ff">Cyan</option></select></div><div><label for="pj">Mes projets</label><select id="pj"></select></div></div>
+<label>Voix off</label><div class="row" style="margin-bottom:10px"><button class="btn o" id="rc" type="button">Enregistrer ma voix</button><button class="btn o" id="vp" type="button">Écouter la voix IA</button></div>
+<label for="vf">ou importer un fichier audio</label><input id="vf" type="file" accept="audio/*" style="margin-bottom:6px">
+<p class="small" id="vs" style="margin:0 0 16px">Ta voix est ajoutée à la vidéo. La voix IA est un aperçu d'écoute : elle n'est pas encore intégrée à la vidéo.</p>
+<details class="adv" style="margin-bottom:16px"><summary>Outils avancés</summary><div style="padding-top:12px">
+<div class="row"><div><label for="tpl">Modèle de script</label><select id="tpl"><option value="">Choisir…</option><option value="facts">Faits surprenants</option><option value="top3">Top 3</option><option value="tips">Conseils</option><option value="story">Histoire</option><option value="motiv">Motivation</option></select></div><div><label for="tr">Transition</label><select id="tr"><option value="fade">Fondu</option><option value="slide">Glissement</option><option value="zoom">Zoom</option><option value="none">Aucune</option></select></div></div>
+<div class="row"><div><label for="ta">Animation du texte</label><select id="ta"><option value="type">Machine à écrire</option><option value="pop">Rebond</option><option value="rise">Montée</option></select></div><div><label for="tpos">Position du texte</label><select id="tpos"><option value=".5">Milieu</option><option value=".25">Haut</option><option value=".72">Bas</option></select></div></div>
+<div class="row"><div><label for="ts">Taille du texte</label><select id="ts"><option value="44">Petite</option><option value="56" selected>Moyenne</option><option value="72">Grande</option></select></div><div><label for="em">Emoji décoratif</label><input id="em" maxlength="4" placeholder="🔥"></div></div>
+<label for="vc">Clip vidéo de fond (facultatif)</label><input id="vc" type="file" accept="video/*">
+<div class="row"><div><label for="mv">Volume musique</label><input id="mv" type="range" min="0" max="1" step=".05" value="1"></div><div><label for="vv">Volume voix</label><input id="vv" type="range" min="0" max="1.5" step=".05" value="1"></div></div>
+</div></details>
+<label for="dur">Durée par scène : <span id="dv">3</span> s</label><input id="dur" type="range" min="2" max="6" value="3">
+<label for="im">Images de fond (facultatif)</label><input id="im" type="file" accept="image/*" multiple>
+<button class="btn" id="mk" type="button">Créer la vidéo</button> <button class="btn o" id="pv" type="button">Aperçu</button> <button class="btn o" id="sv" type="button">Enregistrer le projet</button></div>
+<div><canvas id="cv" width="540" height="960" role="img" aria-label="Aperçu de la vidéo"></canvas><p id="pr" class="small" aria-live="polite" style="text-align:center"></p>
+<div id="res" style="display:none"><video id="vid" controls playsinline></video><button class="btn" id="dl" type="button" style="display:none">Télécharger la vidéo</button><p id="hint" class="small" style="display:none">Clic droit sur la vidéo, puis « Enregistrer la vidéo sous ».</p></div></div></div></section>
+<section id="v-tpl" class="vw" style="display:none"><p class="sec-l">Choisis un modèle : le script et le style sont préparés pour toi.</p><label for="tsu">Sujet (facultatif)</label><input id="tsu" placeholder="Ex. l'espace" maxlength="80"><div class="g3" id="tpg"></div></section>
+<section id="v-chars" class="vw" style="display:none"><p class="sec-l">Choisis le personnage qui accompagne ta vidéo : sa bouche bouge pendant les scènes.</p><div class="g3" id="chg"></div></section>
+<section id="v-proj" class="vw" style="display:none"><div id="prl"></div></section>
+<section id="v-acct" class="vw" style="display:none"><div class="row2"><span>E-mail</span><strong id="ae2"></strong></div><div class="row2"><span>Formule</span><strong id="ap2"></strong></div><div class="row2"><span>Vidéos créées</span><strong id="aq2"></strong></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn o" id="arp" type="button">Changer mon mot de passe</button><button class="btn o" id="alo" type="button">Se déconnecter</button></div><p id="am2" class="ok" role="status"></p>
+<h3>Formules</h3><div class="g3"><div class="tile"><div class="tx"><b>Standard · 25 €</b><span>15 vidéos par mois, 30 s, filigrane Macflow</span></div></div><div class="tile"><div class="tx"><b>Premium · 37 €</b><span>50 vidéos par mois, 60 s, sans filigrane</span></div></div><div class="tile"><div class="tx"><b>Premium Max · 75 €</b><span>Vidéos illimitées, 90 s, sans filigrane</span></div></div></div><p class="small">Les formules payantes arrivent bientôt.</p></section>
+<section id="v-set" class="vw" style="display:none"><div class="row"><div><label for="sth">Thème</label><select id="sth"><option value="auto">Automatique</option><option value="light">Clair</option><option value="dark">Sombre</option></select></div><div><label for="sfm">Format par défaut</label><select id="sfm"><option value="9:16">Vertical 9:16</option><option value="1:1">Carré 1:1</option><option value="16:9">Horizontal 16:9</option></select></div></div>
+<div class="row"><div><label for="sst">Style par défaut</label><select id="sst"><option>Violet</option><option>Océan</option><option>Coucher de soleil</option><option>Nuit</option></select></div><div><label for="sch">Personnage par défaut</label><select id="sch"><option value="">Aucun</option><option value="robot">Robot Tic</option><option value="fox">Renard Flo</option><option value="cat">Chat Mo</option><option value="lea">Léa</option></select></div></div><p class="small">Enregistrés automatiquement sur cet appareil.</p></section>
+</main></div>
+<dialog id="ad"><h2 id="at" style="font-size:1.6rem">Connexion</h2>
+<div id="av1"><form id="af"><label for="ae">E-mail</label><input id="ae" type="email" required autocomplete="email" maxlength="120">
+<label for="ap">Mot de passe</label><input id="ap" type="password" required minlength="6" autocomplete="current-password" maxlength="100">
+<button class="btn" type="submit" id="asub" style="width:100%">Se connecter</button></form>
+<p><button class="btn o" id="ag" type="button" style="width:100%">Continuer avec Google</button></p>
+<p class="small"><button type="button" id="asw" class="lk">Pas de compte ? Créer un compte</button><br><button type="button" id="arst" class="lk">Mot de passe oublié</button></p></div>
+<div id="av2" style="display:none"><p>Connecté avec <strong id="au"></strong></p><button class="btn" id="aout" type="button">Se déconnecter</button></div>
+<p id="am" class="ok" role="status"></p><p style="margin:14px 0 0"><button class="btn o" id="ax" type="button" style="padding:8px 16px">Fermer</button></p></dialog>
+<dialog id="dlg"><h2 style="font-size:1.6rem">Démarre ton essai gratuit</h2><p class="empty">3 vidéos offertes pendant 7 jours. Décris ton projet, on te répond vite.</p>
+<form id="f"><label for="n">Ton prénom</label><input id="n" required maxlength="40">
+<label for="e">WhatsApp ou e-mail</label><input id="e" required maxlength="80" placeholder="+229… ou toi@exemple.com">
+<label for="s">Ta niche ou ton sujet</label><input id="s" required maxlength="100" placeholder="Ex. cuisine, finance, sport…">
+<label for="pl">Formule</label><select id="pl"><option>Standard (25 €/mois)</option><option selected>Premium (37 €/mois)</option><option>Premium Max (75 €/mois)</option></select>
+<button class="btn" type="submit" style="width:100%">Envoyer ma demande</button></form>
+<div id="msg" class="ok" style="display:none"></div>
+<p style="margin:14px 0 0"><button class="btn o" id="x" type="button" style="padding:8px 16px">Fermer</button></p></dialog>
+
+<script>
+var dlg=document.getElementById("dlg");
+document.querySelectorAll("[data-open]").forEach(function(b){b.onclick=function(){document.getElementById("msg").style.display="none";dlg.showModal()}});
+document.getElementById("x").onclick=function(){dlg.close()};
+var CFG={whatsapp:"",email:""};
+document.getElementById("f").onsubmit=function(ev){ev.preventDefault();var g=function(i){return document.getElementById(i).value.trim()};
+ var t="Bonjour Macflow, je m'appelle "+g("n")+". Ma niche : "+g("s")+". Formule : "+g("pl")+". Contact : "+g("e")+". Je veux démarrer l'essai gratuit.";
+ var m=document.getElementById("msg");
+ if(CFG.whatsapp){window.open("https://wa.me/"+CFG.whatsapp+"?text="+encodeURIComponent(t),"_blank");m.textContent="Ta demande s'ouvre dans WhatsApp : envoie le message pour la valider.";}
+ else if(CFG.email){location.href="mailto:"+CFG.email+"?subject="+encodeURIComponent("Demande d'essai Macflow")+"&body="+encodeURIComponent(t);m.textContent="Ta demande s'ouvre dans ta messagerie : envoie l'e-mail pour la valider.";}
+ else{m.textContent="Les inscriptions ouvrent très bientôt. Merci de ton intérêt !";}
+ m.style.display="block"};
+var $=function(i){return document.getElementById(i)};
+var PAL={"Violet":["#5b3df5","#ff6a3d"],"Océan":["#0a6cff","#00d4c2"],"Coucher de soleil":["#ff5e62","#ffb347"],"Nuit":["#1b1340","#8d78ff"]};
+var W=540,H=960,cv=$("cv"),cx=cv.getContext("2d"),imgs=[],CHAR="",TXT="#ffffff",WM=true,TR="fade",TA="type",TPOS=.5,TS=56,EM="",BGV=null;
+function msg(t){$("pr").textContent=t}
+async function cap(n){try{return window.claude&&claude.use?await claude.use(n):null}catch(e){return null}}
+function tpl(t){return ["Tu savais ça sur "+t+" ?","Première idée clé : va à l'essentiel.","Deuxième idée : un exemple concret.","Troisième idée : la plus surprenante.","Abonne-toi pour la suite !"].join("\n")}
+function wrap(text,maxW){var w=text.split(" "),l=[],c="";w.forEach(function(x){var t=c?c+" "+x:x;if(cx.measureText(t).width>maxW&&c){l.push(c);c=x}else c=t});if(c)l.push(c);return l}
+function frame(t,L,D,pal){
+ var n=L.length,total=n*D,i=Math.min(n-1,Math.floor(t/D)),lt=Math.min(1,(t-i*D)/D);cx.fillStyle="#000";cx.fillRect(0,0,W,H);cx.save();applyTr(lt);
+ if(BGV&&BGV.readyState>1){var k0=Math.max(W/BGV.videoWidth,H/BGV.videoHeight),vw=BGV.videoWidth*k0,vh=BGV.videoHeight*k0;cx.drawImage(BGV,(W-vw)/2,(H-vh)/2,vw,vh);cx.fillStyle="rgba(0,0,0,.35)";cx.fillRect(0,0,W,H)}else if(imgs.length){var im=imgs[i%imgs.length],k=Math.max(W/im.width,H/im.height)*(1.05+.1*lt),dw=im.width*k,dh=im.height*k;cx.drawImage(im,(W-dw)/2,(H-dh)/2,dw,dh);cx.fillStyle="rgba(0,0,0,.45)";cx.fillRect(0,0,W,H)}
+ else{var g=cx.createLinearGradient(0,0,W*(.5+.5*Math.sin(t*.5)),H);g.addColorStop(0,pal[0]);g.addColorStop(1,pal[1]);cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  for(var j=0;j<5;j++){cx.fillStyle="rgba(255,255,255,.09)";cx.beginPath();cx.arc(W*((j*.23+t*.03*(j+1))%1.2),H*(.15+.17*j+.03*Math.sin(t+j)),60+j*24,0,6.283);cx.fill()}}
+ var full=L[i];cx.font="800 "+TS+"px 'DM Sans',Arial,sans-serif";cx.textBaseline="middle";cx.textAlign="left";
+ var ls=wrap(full,W-90),lh=TS*1.25,y0=H*TPOS-(ls.length-1)*lh/2,vis=TA=="type"?Math.ceil(Math.min(1,lt*1.8)*full.length):full.length,used=0;cx.save();textFx(lt);
+ ls.forEach(function(s,j){var x=(W-cx.measureText(s).width)/2,y=y0+j*lh,p=s.slice(0,Math.max(0,vis-used));used+=s.length+1;cx.lineWidth=12;cx.lineJoin="round";cx.strokeStyle="rgba(0,0,0,.7)";cx.strokeText(p,x,y);cx.fillStyle=TXT;cx.fillText(p,x,y)});cx.restore();
+ cx.restore();if(CHAR)drawChar(CHAR,t,lt<.7);if(EM){cx.fillStyle="#fff";cx.font=Math.round(W*.16)+"px serif";cx.textAlign="center";cx.textBaseline="middle";cx.fillText(EM,W*.82,H*.12+Math.sin(t*3)*8)}cx.fillStyle="rgba(255,255,255,.9)";cx.fillRect(0,0,W*Math.min(1,t/total),8);
+ cx.font="700 28px 'DM Sans',Arial,sans-serif";cx.textAlign="center";cx.fillStyle="rgba(255,255,255,.8)";if(WM)cx.fillText("Macflow",W/2,H-56);
+ if(TR=="fade"&&lt<.08){cx.fillStyle="rgba(0,0,0,"+(1-lt/.08)+")";cx.fillRect(0,0,W,H)}
+}
+function music(ac,dest,kind,dur,v){if(kind=="none")return;var soft=kind=="soft",b=soft?.5:.25,sc=[0,3,5,7,10,12],base=soft?220:165;
+ for(var k=0;k*b<dur;k++){var o=ac.createOscillator(),g=ac.createGain(),t0=ac.currentTime+.05+k*b;o.type=soft?"triangle":"sawtooth";o.frequency.value=base*Math.pow(2,sc[(k*(soft?1:3))%sc.length]/12);
+ g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime((soft?.12:.06)*(v==null?1:v),t0+.02);g.gain.exponentialRampToValueAtTime(.0001,t0+b*.95);o.connect(g);g.connect(dest);o.start(t0);o.stop(t0+b)}}
+$("dur").oninput=function(){$("dv").textContent=this.value};
+$("im").onchange=function(){imgs=[];Array.from(this.files).slice(0,8).forEach(function(f){var i=new Image();i.onload=function(){imgs.push(i)};i.src=URL.createObjectURL(f)})};
+$("sc").value=tpl($("t").value);
+$("ai").onclick=async function(){var t=$("t").value.trim()||"ton sujet",b=this;b.disabled=true;msg("Écriture du script…");
+ try{var tk=auth&&auth.currentUser?await auth.currentUser.getIdToken():"";var rr=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+tk},body:JSON.stringify({topic:t})});if(rr.ok){var jj=await rr.json();if(Array.isArray(jj.script)&&jj.script.length){$("sc").value=jj.script.join("\n");msg("Script écrit par l'IA. Modifie-le si tu veux.");preview();b.disabled=false;return}}}catch(e){}
+ var sm=await cap("sample");
+ if(!sm){$("sc").value=tpl(t);msg("Script IA indisponible ici : modèle proposé.");b.disabled=false;return}
+ try{var r=await sm.json("Écris le script d'une vidéo verticale d'environ 20 secondes en français sur : "+t+". Réponds uniquement par un tableau JSON de 5 à 6 chaînes très courtes (12 mots maximum chacune) : une accroche, 3 à 4 idées, un appel à l'action.",{modelTier:"quick"});
+  if(Array.isArray(r)&&r.length){$("sc").value=r.map(String).join("\n");msg("Script prêt. Modifie-le si tu veux.")}else{$("sc").value=tpl(t);msg("Modèle proposé à la place.")}}
+ catch(e){$("sc").value=tpl(t);msg("Écriture IA impossible ("+(e&&e.code||"erreur")+"). Modèle proposé.")}
+ b.disabled=false};
+async function show(b,ext){$("vid").src=URL.createObjectURL(b);$("res").style.display="block";msg("Vidéo prête.");
+ var dl=await cap("downloads");$("dl").style.display="inline-block";
+ $("dl").onclick=async function(){if(dl){try{await dl.save({filename:"macflow-video."+ext,data:b})}catch(e){if(!e||e.code!="declined")msg("Téléchargement impossible.")}}else{var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="macflow-video."+ext;document.body.appendChild(a);a.click();a.remove()}}}
+$("mk").onclick=async function(){
+ var L=$("sc").value.split("\n").map(function(x){return x.trim()}).filter(Boolean).slice(0,10);
+ if(!L.length){msg("Écris au moins une ligne de script.");return}
+ var ac=null,vbuf=null,D=+$("dur").value;if(VB){try{ac=new (window.AudioContext||window.webkitAudioContext)();vbuf=await ac.decodeAudioData(await VB.arrayBuffer());D=Math.min(8,Math.max(2,vbuf.duration/L.length))}catch(e){vs("Audio illisible : vidéo créée sans voix.");VB=null;if(ac)ac.close();ac=null;vbuf=null}}readOpts();var pal=PAL[$("st").value],total=L.length*D,mime=["video/webm;codecs=vp9,opus","video/webm;codecs=vp8,opus","video/webm","video/mp4"].filter(function(m){return window.MediaRecorder&&MediaRecorder.isTypeSupported(m)})[0];
+ if(!mime){msg("Ce navigateur ne peut pas enregistrer la vidéo. Essaie Chrome ou Edge.");return}
+ if(PL){if(total>PL.s){msg("Ta formule permet des vidéos de "+PL.s+" secondes maximum : raccourcis le script ou la durée des scènes.");if(ac)ac.close();return}if(PL.q<1e8&&used()>=PL.q){msg("Tu as atteint ta limite de vidéos. Passe à une formule supérieure.");if(ac)ac.close();return}}WM=!PL||!!PL.wm;
+ $("mk").disabled=true;$("res").style.display="none";frame(0,L,D,pal);
+ var stream=cv.captureStream(30),mu=$("mu").value;
+ if(mu!="none"||vbuf){ac=ac||new (window.AudioContext||window.webkitAudioContext)();var d=ac.createMediaStreamDestination();music(ac,d,mu,total,(vbuf?.35:1)*(+$("mv").value));if(vbuf){var src=ac.createBufferSource();src.buffer=vbuf;var vg=ac.createGain();vg.gain.value=+$("vv").value;src.connect(vg);vg.connect(d);src.start(ac.currentTime+.05)}d.stream.getAudioTracks().forEach(function(tr){stream.addTrack(tr)})}
+ var ch=[],rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:4000000});
+ rec.ondataavailable=function(e){if(e.data.size)ch.push(e.data)};
+ rec.onstop=function(){if(ac)ac.close();if(BGV)BGV.pause();bump();show(new Blob(ch,{type:mime.split(";")[0]}),mime.indexOf("mp4")>-1?"mp4":"webm");$("mk").disabled=false};
+ if(BGV){BGV.currentTime=0;BGV.play().catch(function(){})}rec.start();var t0=performance.now();
+ (function loop(){var t=(performance.now()-t0)/1000;if(t>=total){frame(total-.001,L,D,pal);rec.stop();return}frame(t,L,D,pal);msg("Création en cours : "+Math.round(t/total*100)+" %. Garde cet onglet ouvert.");requestAnimationFrame(loop)})()};
+frame(.6,["Ta vidéo apparaîtra ici"],3,PAL["Violet"]);
+
+/* ===== COMPTES (Firebase Authentication) : colle ta configuration ici ===== */
+var FB={apiKey:"AIzaSyDGgForQKVSNPviUkd1WW-vTB10O0aa2FU",authDomain:"macflow-f3c83.firebaseapp.com",projectId:"macflow-f3c83",appId:"1:988280981977:web:975fcdc11cb301dbbdf1c8"};
+var auth=null,mode="login";
+var ERR={"auth/invalid-email":"Adresse e-mail invalide.","auth/email-already-in-use":"Un compte existe déjà avec cet e-mail.","auth/weak-password":"Mot de passe trop court (6 caractères minimum).","auth/invalid-credential":"E-mail ou mot de passe incorrect.","auth/user-not-found":"E-mail ou mot de passe incorrect.","auth/wrong-password":"E-mail ou mot de passe incorrect.","auth/too-many-requests":"Trop d'essais. Réessaie dans quelques minutes.","auth/popup-closed-by-user":"Connexion annulée.","auth/network-request-failed":"Problème de connexion internet."};
+function am(t,bad){var e=$("am");e.textContent=t;e.style.color=bad?"#d6336c":""}
+function loadS(u){return new Promise(function(r,j){var e=document.createElement("script");e.src=u;e.onload=r;e.onerror=j;document.head.appendChild(e)})}
+function setMode(m){mode=m;$("at").textContent=m=="login"?"Connexion":"Créer un compte";$("asub").textContent=m=="login"?"Se connecter":"Créer mon compte";$("asw").textContent=m=="login"?"Pas de compte ? Créer un compte":"Déjà un compte ? Se connecter";$("ap").autocomplete=m=="login"?"current-password":"new-password";am("")}
+function view(u){gateUI(u);$("av1").style.display=u?"none":"block";$("av2").style.display=u?"block":"none";if(u){$("au").textContent=u.email;$("at").textContent="Mon compte"}else setMode(mode);$("authBtn").textContent=u?"Mon compte":"Connexion"}
+$("authBtn").onclick=function(){am("");if(!FB.apiKey)am("Les comptes ouvrent très bientôt.");$("ad").showModal()};
+$("ax").onclick=function(){$("ad").close()};
+$("asw").onclick=function(){setMode(mode=="login"?"signup":"login")};
+$("af").onsubmit=async function(ev){ev.preventDefault();if(!auth){am("Les comptes ouvrent très bientôt.",1);return}
+ var e=$("ae").value.trim(),p=$("ap").value;am("Un instant…");
+ try{if(mode=="signup"){var c=await auth.createUserWithEmailAndPassword(e,p);try{await c.user.sendEmailVerification()}catch(x){}}else await auth.signInWithEmailAndPassword(e,p);am("");$("ap").value=""}
+ catch(x){am(ERR[x.code]||"Une erreur est survenue. Réessaie.",1)}};
+$("ag").onclick=async function(){if(!auth){am("Les comptes ouvrent très bientôt.",1);return}try{await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())}catch(x){am(ERR[x.code]||"Connexion Google impossible.",1)}};
+$("arst").onclick=async function(){var e=$("ae").value.trim();if(!auth){am("Les comptes ouvrent très bientôt.",1);return}if(!e){am("Écris ton e-mail ci-dessus, puis reclique.",1);return}
+ try{await auth.sendPasswordResetEmail(e)}catch(x){}am("Si un compte existe avec cet e-mail, un lien de réinitialisation vient d'être envoyé.")};
+$("aout").onclick=function(){if(auth)auth.signOut()};
+(async function(){if(!FB.apiKey)return;try{await loadS("https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js");await loadS("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js");await loadS("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js");firebase.initializeApp(FB);auth=firebase.auth();db=firebase.firestore();auth.onAuthStateChanged(async function(u){PL=u?await loadPlan(u):null;view(u)})}catch(e){}})();
+
+/* ===== OUTILS DU STUDIO ===== */
+var PAY={std:"",pre:"",max:""}; /* colle ici tes liens de paiement */
+var VB=null,mr=null;
+function vs(t){$("vs").textContent=t}
+function drawChar(k,t,talk,px,py,ps){var s=ps||Math.min(W,H)*.11,x=px==null?W*.2:px,y=py==null?H-s*2.3+Math.sin(t*3)*4:py,b=talk?Math.abs(Math.sin(t*14))*s*.2:0;
+ cx.save();cx.translate(x,y);cx.lineWidth=5;cx.strokeStyle="#111";
+ function eyes(c){cx.fillStyle=c||"#111";cx.beginPath();cx.arc(-s*.35,-s*.1,s*.11,0,6.3);cx.arc(s*.35,-s*.1,s*.11,0,6.3);cx.fill()}
+ function mouth(){cx.fillStyle="#111";cx.beginPath();cx.ellipse(0,s*.4,s*.22,s*.05+b,0,0,6.3);cx.fill()}
+ function ears(c,a,h){cx.fillStyle=c;[-1,1].forEach(function(d){cx.beginPath();cx.moveTo(d*s*.95,-s*.2);cx.lineTo(d*s*a,-s*h);cx.lineTo(d*s*.2,-s*.8);cx.closePath();cx.fill();cx.stroke()})}
+ function head(c){cx.fillStyle=c;cx.beginPath();cx.arc(0,0,s,0,6.3);cx.fill();cx.stroke()}
+ if(k=="robot"){cx.fillStyle="#9ab0c8";cx.fillRect(-s,-s,s*2,s*1.8);cx.strokeRect(-s,-s,s*2,s*1.8);cx.fillStyle="#fff";cx.fillRect(-s*.6,-s*.4,s*.4,s*.32);cx.fillRect(s*.2,-s*.4,s*.4,s*.32);cx.fillStyle="#111";cx.fillRect(-s*.5,-s*.32,s*.2,s*.16);cx.fillRect(s*.3,-s*.32,s*.2,s*.16);mouth();cx.beginPath();cx.moveTo(0,-s);cx.lineTo(0,-s*1.4);cx.stroke();cx.fillStyle="#ff6a3d";cx.beginPath();cx.arc(0,-s*1.45,s*.13,0,6.3);cx.fill()}
+ else if(k=="fox"){ears("#ff8a3d",.7,1.5);head("#ff8a3d");cx.fillStyle="#fff";cx.beginPath();cx.ellipse(0,s*.45,s*.6,s*.45,0,0,6.3);cx.fill();eyes();mouth()}
+ else if(k=="cat"){ears("#7d8597",.8,1.35);head("#7d8597");eyes("#ffe14d");cx.fillStyle="#111";cx.fillRect(-s*.35-2,-s*.2,4,s*.22);cx.fillRect(s*.35-2,-s*.2,4,s*.22);cx.lineWidth=2;cx.beginPath();[-1,1].forEach(function(d){cx.moveTo(d*s*.5,s*.25);cx.lineTo(d*s*1.2,s*.15);cx.moveTo(d*s*.5,s*.35);cx.lineTo(d*s*1.2,s*.4)});cx.stroke();mouth()}
+ else{cx.fillStyle="#3a2418";cx.beginPath();cx.arc(0,-s*.1,s*1.12,Math.PI,0);cx.lineTo(s*1.12,s*1.1);cx.lineTo(-s*1.12,s*1.1);cx.closePath();cx.fill();head("#f0c9a0");cx.fillStyle="#3a2418";cx.beginPath();cx.arc(0,-s*.05,s*1.02,Math.PI*1.02,Math.PI*1.98);cx.lineTo(s*.8,-s*.45);cx.quadraticCurveTo(0,-s*.1,-s*.8,-s*.45);cx.closePath();cx.fill();eyes();mouth()}
+ cx.restore()}
+function preview(){var L=$("sc").value.split("\n").filter(Boolean);readOpts();frame(.9,L.length?[L[0]]:["Ton texte ici"],3,PAL[$("st").value])}
+function setFmt(){var f=$("fm").value;W=f=="16:9"?960:540;H=f=="9:16"?960:540;cv.width=W;cv.height=H;[cv,$("vid")].forEach(function(e){e.style.aspectRatio=W+"/"+H;e.style.maxWidth=f=="16:9"?"480px":"300px"});preview()}
+$("fm").onchange=setFmt;["ch","tc","st"].forEach(function(i){$(i).onchange=preview});$("sc").oninput=preview;
+$("rc").onclick=async function(){if(mr&&mr.state=="recording"){mr.stop();return}
+ try{var st=await navigator.mediaDevices.getUserMedia({audio:true}),ch=[];mr=new MediaRecorder(st);mr.ondataavailable=function(e){ch.push(e.data)};
+  mr.onstop=function(){st.getTracks().forEach(function(x){x.stop()});VB=new Blob(ch,{type:mr.mimeType});$("rc").textContent="Réenregistrer ma voix";vs("Voix enregistrée : elle sera ajoutée à la vidéo.")};
+  mr.start();$("rc").textContent="Arrêter l'enregistrement";vs("Enregistrement… lis ton script à voix haute, une scène après l'autre.")}
+ catch(e){vs("Micro indisponible ou refusé. Autorise le micro dans ton navigateur.")}};
+$("vf").onchange=function(){if(this.files[0]){VB=this.files[0];vs("Fichier audio prêt : "+this.files[0].name)}};
+$("vp").onclick=function(){var L=$("sc").value.split("\n").filter(Boolean);if(!window.speechSynthesis){vs("Voix IA indisponible sur ce navigateur.");return}speechSynthesis.cancel();var i=0;(function nx(){if(i>=L.length)return;var u=new SpeechSynthesisUtterance(L[i++]);u.lang="fr-FR";u.onend=nx;speechSynthesis.speak(u)})()};
+function pk(){return "mf_"+(auth&&auth.currentUser?auth.currentUser.uid:"invite")}
+function pl(){try{return JSON.parse(localStorage.getItem(pk())||"[]")}catch(e){return[]}}
+function pf(){var s=$("pj");s.innerHTML="";var o=document.createElement("option");o.value="";o.textContent="Choisir…";s.appendChild(o);pl().forEach(function(p,i){var q=document.createElement("option");q.value=i;q.textContent=p.n;s.appendChild(q)})}
+$("sv").onclick=function(){var a=pl(),o={n:$("t").value.trim()||"Sans titre"};["t","sc","st","mu","dur","fm","ch","tc","tr","ta","tpos","ts","em","mv","vv"].forEach(function(k){o[k]=$(k).value});a.unshift(o);try{localStorage.setItem(pk(),JSON.stringify(a.slice(0,20)));msg("Projet enregistré sur cet appareil.")}catch(e){msg("Enregistrement impossible.")}pf()};
+$("pj").onchange=function(){var p=pl()[+this.value];if(!p)return;["t","sc","st","mu","dur","fm","ch","tc","tr","ta","tpos","ts","em","mv","vv"].forEach(function(k){if(p[k]!==undefined)$(k).value=p[k]});$("dv").textContent=p.dur;setFmt()};
+document.querySelectorAll("[data-open]").forEach(function(b){b.onclick=function(){setMode("signup");am("");if(!FB.apiKey)am("Les comptes ouvrent très bientôt.");$("ad").showModal()}});
+document.querySelectorAll("[data-pay]").forEach(function(b){b.onclick=function(){setMode("signup");am("Les formules payantes arrivent bientôt. Crée d'abord ton compte gratuit (7 jours d'essai).");$("ad").showModal()}});
+
+/* ===== ESSAI, FORMULES ET PAIEMENT MOBILE MONEY ===== */
+var db=null,PL=null;
+var PLANS={STANDARD:{n:"Standard",q:15,s:30,wm:1,eur:25,fc:16399},PREMIUM:{n:"Premium",q:50,s:60,wm:0,eur:37,fc:24270},PREMIUM_MAX:{n:"Premium Max",q:1e9,s:90,wm:0,eur:75,fc:49197}};
+async function loadPlan(u){
+ try{var r=db.collection("users").doc(u.uid),d=await r.get();
+  if(!d.exists){await r.set({email:u.email,plan:"TRIAL",trialEnds:firebase.firestore.Timestamp.fromDate(new Date(Date.now()+7*864e5)),createdAt:firebase.firestore.FieldValue.serverTimestamp()});d=await r.get()}
+  var x=d.data(),n=Date.now(),te=x.trialEnds&&x.trialEnds.toMillis?x.trialEnds.toMillis():0,pe=x.planEnds&&x.planEnds.toMillis?x.planEnds.toMillis():0;
+  if(PLANS[x.plan]&&pe>n){var p=PLANS[x.plan];return{kind:"active",name:p.n,q:p.q,s:p.s,wm:p.wm,ends:pe}}
+  if(te>n)return{kind:"trial",name:"Essai gratuit",q:3,s:30,wm:1,ends:te};
+  return{kind:"expired",name:"Essai terminé"}
+ }catch(e){return{kind:"error",name:"Mode limité",q:3,s:30,wm:1}}}
+function qk(){return "mf_n_"+(auth&&auth.currentUser?auth.currentUser.uid:"x")+"_"+(PL&&PL.kind=="trial"?"trial":new Date().toISOString().slice(0,7))}
+function used(){try{return +(localStorage.getItem(qk())||0)}catch(e){return 0}}
+function bump(){try{localStorage.setItem(qk(),used()+1)}catch(e){}if(PL&&auth&&auth.currentUser)pbar()}
+setFmt();
+
+/* ===== OUTILS AVANCÉS ===== */
+function applyTr(lt){if(TR=="slide"){var q=Math.min(1,lt/.14);cx.translate((1-q*(2-q))*W,0)}else if(TR=="zoom"){var z=1.18-.18*Math.min(1,lt/.16);cx.translate(W/2,H/2);cx.scale(z,z);cx.translate(-W/2,-H/2)}}
+function textFx(lt){if(TA=="pop"){var q=Math.min(1,lt/.18),sc=.5+.5*q+.12*Math.sin(q*3.14);cx.translate(W/2,H*TPOS);cx.scale(sc,sc);cx.translate(-W/2,-H*TPOS)}else if(TA=="rise"){var r=Math.min(1,lt/.22);cx.globalAlpha=r;cx.translate(0,(1-r)*70)}}
+function readOpts(){CHAR=$("ch").value;TXT=$("tc").value;TR=$("tr").value;TA=$("ta").value;TPOS=+$("tpos").value;TS=+$("ts").value;EM=$("em").value.trim().slice(0,4)}
+["tr","ta","tpos","ts"].forEach(function(i){$(i).onchange=preview});$("em").oninput=preview;
+var TPL={
+ facts:function(t){return["Tu ne vas pas croire ça sur "+t+" !","Fait n°1 : le plus connu, mais souvent mal compris.","Fait n°2 : un chiffre qui surprend.","Fait n°3 : le détail que presque personne ne connaît.","Abonne-toi pour d'autres faits !"]},
+ top3:function(t){return["Mon top 3 sur "+t+".","N°3 : le plus facile à essayer.","N°2 : celui qui change tout.","N°1 : mon préféré, et de loin.","Dis-moi ton choix en commentaire !"]},
+ tips:function(t){return["3 conseils sur "+t+" que j'aurais voulu connaître.","Conseil 1 : commence petit.","Conseil 2 : sois régulier chaque jour.","Conseil 3 : mesure tes progrès.","Enregistre cette vidéo pour t'en souvenir !"]},
+ story:function(t){return["Une histoire incroyable sur "+t+".","Tout a commencé par un détail minuscule.","Puis, personne ne s'y attendait.","Et la fin change tout.","Suis-moi pour la prochaine histoire !"]},
+ motiv:function(t){return["Si tu veux réussir dans "+t+", écoute ça.","Personne ne commence parfait.","Chaque jour compte, même les petits.","Continue, ton moment arrive.","Partage à quelqu'un qui en a besoin."]}};
+$("tpl").onchange=function(){var f=TPL[this.value];if(f)$("sc").value=f($("t").value.trim()||"ton sujet").join("\n");preview()};
+var bv=document.createElement("video");bv.muted=true;bv.loop=true;bv.playsInline=true;
+$("vc").onchange=function(){var f=this.files[0];if(!f){BGV=null;preview();return}bv.src=URL.createObjectURL(f);bv.onloadeddata=function(){BGV=bv;preview()}};
+$("pv").onclick=function(){var L=$("sc").value.split("\n").map(function(x){return x.trim()}).filter(Boolean).slice(0,10);if(!L.length){msg("Écris au moins une ligne de script.");return}
+ readOpts();var D=+$("dur").value,pal=PAL[$("st").value],total=L.length*D,t0=performance.now();if(BGV){BGV.currentTime=0;BGV.play().catch(function(){})}
+ (function lp(){var t=(performance.now()-t0)/1000;if(t>=total){if(BGV)BGV.pause();preview();return}frame(t,L,D,pal);requestAnimationFrame(lp)})()};
+
+/* ===== ESPACE MEMBRE ===== */
+var VIEWS={home:"Accueil",new:"Nouveau projet",tpl:"Modèles de vidéos",chars:"Personnages",proj:"Mes projets",acct:"Mon compte",set:"Paramètres"},CUR="home";
+var FIELDS=["t","sc","st","mu","dur","fm","ch","tc","tr","ta","tpos","ts","em","mv","vv"];
+var TPLS=[{k:"facts",n:"Faits surprenants",e:"🤯",c:"#5b3df5",st:"Violet"},{k:"top3",n:"Top 3",e:"🏆",c:"#ff6a3d",st:"Coucher de soleil"},{k:"tips",n:"Conseils",e:"💡",c:"#0a6cff",st:"Océan"},{k:"story",n:"Histoire",e:"📖",c:"#2a1f66",st:"Nuit"},{k:"motiv",n:"Motivation",e:"🔥",c:"#ff5e62",st:"Coucher de soleil"},{k:"myth",n:"Mythe ou réalité",e:"🧐",c:"#7a3df5",st:"Violet"},{k:"quick",n:"Astuce express",e:"⚡",c:"#00a8a0",st:"Océan"},{k:"ask",n:"Question du jour",e:"❓",c:"#c0392b",st:"Nuit"}];
+var CHS=[{k:"robot",n:"Robot Tic",d:"Le robot curieux"},{k:"fox",n:"Renard Flo",d:"Malin et rapide"},{k:"cat",n:"Chat Mo",d:"Calme et mystérieux"},{k:"lea",n:"Léa",d:"La présentatrice"}];
+TPL.myth=function(t){return["Mythe ou réalité : "+t+" ?","Beaucoup de gens croient le contraire.","La vérité est plus simple.","Voici ce qu'il faut retenir.","Partage pour détromper un ami !"]};
+TPL.quick=function(t){return["Astuce express sur "+t+".","Étape 1 : prépare l'essentiel.","Étape 2 : fais-le simplement.","Résultat : un vrai gain de temps.","Enregistre pour t'en souvenir !"]};
+TPL.ask=function(t){return["Question du jour sur "+t+" :","Réfléchis bien avant de répondre.","Indice : c'est plus simple qu'il n'y paraît.","Écris ta réponse en commentaire !","Réponse demain, abonne-toi !"]};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function go(v){CUR=v;Object.keys(VIEWS).forEach(function(k){$("v-"+k).style.display=k==v?"block":"none"});
+ document.querySelectorAll(".sb button[data-v]").forEach(function(b){b.className=b.dataset.v==v?"on":""});
+ $("vt").textContent=VIEWS[v];var ex=!!(PL&&PL.kind=="expired");$("exp").style.display=ex?"flex":"none";$("tools").style.display=ex?"none":"";
+ if(v=="home")rHome();if(v=="tpl")rTpl();if(v=="chars")rChars();if(v=="proj")rProj();if(v=="acct")rAcct();if(v=="new")preview();window.scrollTo(0,0)}
+function useTpl(k){var T=TPLS.filter(function(x){return x.k==k})[0],t=$("tsu").value.trim()||$("t").value.trim()||"ton sujet";if($("tsu").value.trim())$("t").value=t;$("sc").value=TPL[k](t);$("st").value=T.st;go("new")}
+function tplTile(T){var d=el("div","tile"),th=el("div","th",T.e);th.style.background=T.c;var x=el("div","tx");x.appendChild(el("b",null,T.n));x.appendChild(el("span",null,"5 scènes · style "+T.st));var b=el("button","btn o","Utiliser");b.type="button";b.onclick=function(){useTpl(T.k)};x.appendChild(b);d.appendChild(th);d.appendChild(x);return d}
+function rTpl(){var g=$("tpg");g.innerHTML="";TPLS.forEach(function(T){g.appendChild(tplTile(T))})}
+function charThumb(c,k){var oc=cx,oW=W,oH=H;cx=c.getContext("2d");W=c.width;H=c.height;cx.fillStyle="#2c2850";cx.fillRect(0,0,W,H);drawChar(k,.5,false,W/2,H/2+8,48);cx=oc;W=oW;H=oH}
+function rChars(){var g=$("chg");g.innerHTML="";CHS.forEach(function(C){var d=el("div","tile"),c=document.createElement("canvas");c.width=200;c.height=200;d.appendChild(c);charThumb(c,C.k);var x=el("div","tx");x.appendChild(el("b",null,C.n));x.appendChild(el("span",null,C.d));var b=el("button","btn o","Utiliser");b.type="button";b.onclick=function(){$("ch").value=C.k;go("new")};x.appendChild(b);d.appendChild(x);g.appendChild(d)})}
+function openProj(i){var p=pl()[i];if(!p)return;FIELDS.forEach(function(k){if(p[k]!==undefined)$(k).value=p[k]});$("dv").textContent=$("dur").value;setFmt();go("new")}
+function delProj(i){var a=pl();a.splice(i,1);try{localStorage.setItem(pk(),JSON.stringify(a))}catch(e){}rProj();pf()}
+function projRow(p,i){var r=el("div","row2");r.appendChild(el("strong",null,p.n));var w=el("div");w.style.cssText="display:flex;gap:8px";var o=el("button","btn o","Ouvrir");o.type="button";o.onclick=function(){openProj(i)};var d=el("button","btn o","Supprimer");d.type="button";d.onclick=function(){delProj(i)};w.appendChild(o);w.appendChild(d);r.appendChild(w);return r}
+function rProj(){var g=$("prl");g.innerHTML="";var a=pl();if(!a.length)g.appendChild(el("p","small","Aucun projet pour l'instant. Crée une vidéo puis clique sur « Enregistrer le projet »."));a.forEach(function(p,i){g.appendChild(projRow(p,i))})}
+function rHome(){var u=auth&&auth.currentUser,n=u&&u.email?u.email.split("@")[0]:"";$("hw").textContent=n?"Bienvenue, "+n+" !":"Bienvenue !";
+ $("s1").textContent=PL?PL.name:"–";$("s2").textContent=used()+(PL&&PL.q<1e8?" / "+PL.q:"");$("s3").textContent=pl().length;
+ var t=$("hmt");t.innerHTML="";TPLS.slice(0,4).forEach(function(T){t.appendChild(tplTile(T))});
+ var p=$("hmp");p.innerHTML="";var a=pl().slice(0,3);if(!a.length)p.appendChild(el("p","small","Tes projets enregistrés apparaîtront ici."));a.forEach(function(x,i){p.appendChild(projRow(x,i))})}
+function rAcct(){var u=auth&&auth.currentUser;$("ae2").textContent=u?u.email:"";var t=PL?PL.name:"";if(PL&&PL.ends)t+=" · jusqu'au "+new Date(PL.ends).toLocaleDateString("fr-FR");$("ap2").textContent=t;$("aq2").textContent=used()+(PL&&PL.q<1e8?" / "+PL.q:"")}
+function pbar(){var t=PL?(PL.kind=="error"?"Mode limité":PL.name):"";if(PL&&PL.ends)t+=" · jusqu'au "+new Date(PL.ends).toLocaleDateString("fr-FR");$("tbp").textContent=t;if(CUR=="home")rHome();if(CUR=="acct")rAcct()}
+function gateUI(u){var app=!!FB.apiKey&&!!u;$("landing").style.display=app?"none":"";$("appshell").style.display=app?"grid":"none";if(app){if($("ad").open)$("ad").close();pbar();go(CUR)}else CUR="home";pf()}
+document.querySelectorAll("[data-v]").forEach(function(b){b.onclick=function(){go(b.dataset.v)}});
+$("alo").onclick=function(){if(auth)auth.signOut()};
+$("arp").onclick=async function(){var u=auth&&auth.currentUser;if(!u)return;try{await auth.sendPasswordResetEmail(u.email)}catch(e){}$("am2").textContent="Un e-mail pour changer ton mot de passe t'a été envoyé."};
+function setLoad(){try{return JSON.parse(localStorage.getItem("mf_set")||"{}")}catch(e){return{}}}
+function applySet(){var s=setLoad();if(s.th=="light"||s.th=="dark")document.documentElement.setAttribute("data-theme",s.th);else document.documentElement.removeAttribute("data-theme");
+ if(s.st)$("st").value=s.st;if(s.fm)$("fm").value=s.fm;if(s.ch!==undefined)$("ch").value=s.ch;$("sth").value=s.th||"auto";$("sst").value=s.st||"Violet";$("sfm").value=s.fm||"9:16";$("sch").value=s.ch||"";setFmt()}
+["sth","sst","sfm","sch"].forEach(function(i){$(i).onchange=function(){var s={th:$("sth").value,st:$("sst").value,fm:$("sfm").value,ch:$("sch").value};try{localStorage.setItem("mf_set",JSON.stringify(s))}catch(e){}applySet()}});
+applySet();gateUI(null);
+</script>
+</body>
+</html>
